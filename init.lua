@@ -11,6 +11,8 @@ local concat = table.concat
 local strbyte = string.byte
 local strchar = string.char
 
+local strload
+
 local cmds = {
   [0x00] = "head1",
   [0x01] = "head2",
@@ -66,7 +68,7 @@ function _M.encode(payload)
     end
 end
 function getnumber( index )
-   return strTonum(string.byte(string.sub(payload,index,index)))
+   return strTonum(string.byte(string.sub(strload,index,index)))
 end
 function strTonum( data )
   if data > 96 and data < 103 then
@@ -82,6 +84,7 @@ function strTonum( data )
 end
 function _M.decode(payload)
     local packet = {}
+    strload = payload;
     packet['status'] = 'not'
     local head1 = string.sub(payload,1,1)
     local head2 = string.sub(payload,2,2)
