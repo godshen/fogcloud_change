@@ -71,8 +71,8 @@ function _M.decode(payload)
     local head1 = string.sub(payload,1,1)
     local head2 = string.sub(payload,2,2)
 
-    if (head1==';'and head2=='1') then 
-      
+    if (head1==0x3b and head2==0x31) then 
+      packet['length'] = string.sub(payload,3,3) << 8 + string.sub(payload,4,4)
       packet['status'] = 'success'
 
     else
