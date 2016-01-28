@@ -2,6 +2,7 @@ local _M = {}
 local bit = require "bit"
 local crc16 = require "crc16"
 local cjson = require "cjson.safe"
+local bit = require "bit"
 local Json = cjson.encode
 
 local insert = table.insert
@@ -74,9 +75,9 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1== ';' and head2=='1') then 
-      x = tonumber(string.sub(payload,3,3),16)
+      x = tonumber(string.sub(payload,3,3),16) 
       y = tonumber(string.sub(payload,4,4),16) 
-      z = y + x 
+      packet[ cmds[2] ] = y bor (x<<8) 
       --packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) * 16777216 +tonumber(string.sub(payload,6,6),16) * 65536 +tonumber(string.sub(payload,7,7),16) * 256 +tonumber(string.sub(payload,8,8),16)
       --packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
       --packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16) 
