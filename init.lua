@@ -67,11 +67,11 @@ end
 function _M.decode(payload)
     local packet = {}
 
-    local head1 = string.sub(payload,1)
+    local head1 = string.sub(payload,1,1)
 
     packet[ cmds[0] ] = head1
 
-    local head2 = string.sub(payload,2)
+    local head2 = string.sub(payload,2,2)
     packet[ cmds[1] ] = head2
 
 
