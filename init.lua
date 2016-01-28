@@ -76,7 +76,7 @@ function _M.decode(payload)
       packet['status'] = 'success'
 
     else
-      packet['status'] = 'wrong data'
+      packet['status'] = 'wrong'
 
     end
 
