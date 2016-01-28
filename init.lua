@@ -87,7 +87,7 @@ function _M.decode(payload)
       end
       packet[ cmds[18] ] = tonumber(string.sub(payload,35,36),16)
     else
-      packet['error':'wrong data']
+      packet['error'] = 'wrong data'
 
     end
 
