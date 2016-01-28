@@ -67,7 +67,7 @@ end
 
 function _M.decode(payload)
     local packet = {}
-    packet['status'] = 'nothing'
+    packet['status'] = 'not'
     local head1 = string.sub(payload,1,1)
     local head2 = string.sub(payload,2,2)
 
