@@ -72,7 +72,7 @@ function _M.decode(payload)
 
     if (head1==';'and head2=='1') then 
       packet[ cmds[2] ] = tonumber(string.sub(payload,3,4),16)
-      packet[ cmds[3] ] = tonumber(string.sub(payload,5,6),16) << 8 + tonumber(string.sub(payload,7,8),16)
+      packet[ cmds[3] ] = tonumber(string.sub(payload,5,6),16) * 65536 + tonumber(string.sub(payload,7,8),16)
       packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16)
       packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16)
       for i=0,22,2
