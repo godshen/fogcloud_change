@@ -85,7 +85,7 @@ function _M.decode(payload)
         packet[ cmds[6+i/2] ] = tonumber(string.sub(payload,11+i,12+i),16)
 
       end
-      packet[ cmds[18] ] = tonumber(string.sub(payload,34,36),16)
+      packet[ cmds[18] ] = tonumber(string.sub(payload,35,36),16)
 
     end
 
