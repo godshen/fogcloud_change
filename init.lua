@@ -71,22 +71,15 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1==';'and head2=='1') then 
-      packet[ cmds[2] ] = tonumber(string.sub(payload,3,4),16)
-      packet[ cmds[3] ] = tonumber(string.sub(payload,5,6),16) 
-      packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16)
-      packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16)
-      for i=0,22,2
-        do
-        packet[ cmds[6+i/2] ] = tonumber(string.sub(payload,11+i,12+i),16)
+      
+      packet['success'] = 'done'
 
-      end
-      packet[ cmds[18] ] = tonumber(string.sub(payload,35,36),16)
     else
       packet['error'] = 'wrong data'
 
     end
 
-    
+    vCRCCheckNumCalculate(uint8 *pCheckBuf,uint8 * u8High,uint8 * u8Low) 
 
     return Json(packet)
 end
