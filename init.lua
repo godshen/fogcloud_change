@@ -66,13 +66,13 @@ function _M.encode(payload)
     end
 end
 function strTonum( data )
-  if data > 96 && data < 103 then
+  if data > 96 and data < 103 then
     return data - 87
   end
-  if data > 64 && data < 70 then
+  if data > 64 and data < 70 then
     return data - 55
   end
-  if data > 47 && data < 57 then
+  if data > 47 and data < 57 then
     return data - 48
   end
 end
