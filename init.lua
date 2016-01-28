@@ -65,6 +65,9 @@ function _M.encode(payload)
         return _pack(cmd, data)
     end
 end
+function getnumber( index )
+   return strTonum(string.byte(string.sub(payload,index,index)))
+end
 function strTonum( data )
   if data > 96 and data < 103 then
     data = data - 87
@@ -84,12 +87,20 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1== ';' and head2=='1') then 
-      local x = strTonum(string.byte(string.sub(payload,3,3)))
-      local y = strTonum(string.byte(string.sub(payload,4,4)))
-      packet[ cmds[2] ] = x * 256 + y;
-      packet[ cmds[3] ] = strTonum(string.byte(string.sub(payload,5,5))) * 16777216 + strTonum(string.byte(string.sub(payload,6,6))) * 65536 +strTonum(string.byte(string.sub(payload,7,7))) * 256 +strTonum(string.byte(string.sub(payload,8,8)))
-      packet[ cmds[4] ] = strTonum(string.byte(string.sub(payload,9,9))) 
-      packet[ cmds[5] ] = strTonum(string.byte(string.sub(payload,10,10))) 
+
+      packet[ cmds[2] ] = getnumber(3) * 256 + getnumber(4);
+      packet[ cmds[3] ] = getnumber(5) * 16777216 + getnumber(6) * 65536 + getnumber(7) * 256 + getnumber(8)
+      if getnumber(9) == 1 then
+        packet[ cmds[4] ] = 'Mode-485'
+      else
+        packet[ cmds[4] ] = 'Mode-232'
+      end
+      packet[ cmds[5] ] = getnumber(10)
+
+      for i=0,22,2
+        do
+        packet[ cmds[6+i/2] ] = getnumber(11+i) * 256 + getnumber(12+i)
+      end
       packet['status'] = 'success'
 
     else
@@ -99,12 +110,6 @@ function _M.decode(payload)
 
     return Json(packet)
 end
-
---local bin = _pack('eco', '530');
---bin = _M.encode('{"timing-on": 0531}');
---print(string.tohex(bin))
---print(_M.decode(bin))
---print(_M.decode(string.fromhex('aa0010050102030405060708090a051e051e0101010101010101010101010101')))
 
 return _M
 
