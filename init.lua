@@ -73,8 +73,8 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1== ';' and head2=='1') then 
-      local x = tonumber(string.sub(payload,3,3),10)
-      local y = tonumber(string.sub(payload,4,4),10)
+      local x = string.sub(payload,3,3)
+      local y = string.sub(payload,4,4)
       packet[ cmds[2] ] = x * 256 + y;
       --packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) * 16777216 +tonumber(string.sub(payload,6,6),16) * 65536 +tonumber(string.sub(payload,7,7),16) * 256 +tonumber(string.sub(payload,8,8),16)
       --packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
