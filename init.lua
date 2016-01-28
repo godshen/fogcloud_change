@@ -76,7 +76,7 @@ function _M.decode(payload)
     if (head1== ';' and head2=='1') then 
       x = tonumber(string.sub(payload,3,3),16)
       y = tonumber(string.sub(payload,4,4),16) 
-      z =  x+y 
+      z = y + x 
       --packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) * 16777216 +tonumber(string.sub(payload,6,6),16) * 65536 +tonumber(string.sub(payload,7,7),16) * 256 +tonumber(string.sub(payload,8,8),16)
       --packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
       --packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16) 
