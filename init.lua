@@ -80,8 +80,6 @@ function _M.decode(payload)
 
     end
 
-    vCRCCheckNumCalculate(uint8 *pCheckBuf,uint8 * u8High,uint8 * u8Low) 
-
     return Json(packet)
 end
 
