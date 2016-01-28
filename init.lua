@@ -67,14 +67,15 @@ function _M.encode(payload)
 end
 function strTonum( data )
   if data > 96 and data < 103 then
-    return data - 87
+    data = data - 87
   end
   if data > 64 and data < 70 then
-    return data - 55
+    data = data - 55
   end
-  if data > 47 and data < 57 then
-    return data - 48
+  if data > 47 and data < 59 then
+    data = data - 48
   end
+  return data
 end
 function _M.decode(payload)
     local packet = {}
