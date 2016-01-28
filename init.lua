@@ -42,6 +42,7 @@ end
 
 local function _pack(cmd, data, msg_id)
     local packet = {}
+    packet['status'] = 'nothing'
     insert(packet, string.char(0xAA))
     
     return concat(packet, "")
@@ -66,16 +67,15 @@ end
 
 function _M.decode(payload)
     local packet = {}
-
     local head1 = string.sub(payload,1,1)
     local head2 = string.sub(payload,2,2)
 
     if (head1==';'and head2=='1') then 
       
-      packet['success'] = 'done'
+      packet['status'] = 'success'
 
     else
-      packet['error'] = 'wrong data'
+      packet['status'] = 'wrong data'
 
     end
 
