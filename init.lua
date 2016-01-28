@@ -68,12 +68,7 @@ function _M.decode(payload)
     local packet = {}
 
     local head1 = string.sub(payload,1,1)
-
-    packet[ cmds[0] ] = head1
-
     local head2 = string.sub(payload,2,2)
-    packet[ cmds[1] ] = head2
-
 
     if (head1==';'and head2=='1') then 
       packet[ cmds[2] ] = tonumber(string.sub(payload,3,4),16)
