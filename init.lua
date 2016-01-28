@@ -65,7 +65,17 @@ function _M.encode(payload)
         return _pack(cmd, data)
     end
 end
-
+function strTonum( data )
+  if data > 96 && data < 103 then
+    return data - 87
+  end
+  if data > 64 && data < 70 then
+    return data - 55
+  end
+  if data > 47 && data < 57 then
+    return data - 48
+  end
+end
 function _M.decode(payload)
     local packet = {}
     packet['status'] = 'not'
@@ -73,9 +83,9 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1== ';' and head2=='1') then 
-      local x = string.byte(string.sub(payload,3,3))
-      local y = string.byte(string.sub(payload,4,4))
-      packet[ cmds[2] ] = x * 3 + y;
+      local x = strTonum(string.byte(string.sub(payload,3,3)))
+      local y = strTonum(string.byte(string.sub(payload,4,4)))
+      packet[ cmds[2] ] = x * 256 + y;
       --packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) * 16777216 +tonumber(string.sub(payload,6,6),16) * 65536 +tonumber(string.sub(payload,7,7),16) * 256 +tonumber(string.sub(payload,8,8),16)
       --packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
       --packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16) 
