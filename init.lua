@@ -72,7 +72,10 @@ function _M.decode(payload)
     local head2 = string.sub(payload,2,2)
 
     if (head1==0x3b and head2==0x31) then 
-      packet['length'] = string.sub(payload,3,3) << 8 + string.sub(payload,4,4)
+      packet[ cmds[2] ] = tonumber(string.sub(payload,3,3),16) << 8 + tonumber(string.sub(payload,4,4),16) 
+      packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) << 24 +tonumber(string.sub(payload,6,6),16) << 16 +tonumber(string.sub(payload,7,7),16) << 8 +tonumber(string.sub(payload,8,8),16)
+      packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
+      packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16) 
       packet['status'] = 'success'
 
     else
