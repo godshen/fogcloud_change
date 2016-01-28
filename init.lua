@@ -87,9 +87,9 @@ function _M.decode(payload)
       local x = strTonum(string.byte(string.sub(payload,3,3)))
       local y = strTonum(string.byte(string.sub(payload,4,4)))
       packet[ cmds[2] ] = x * 256 + y;
-      --packet[ cmds[3] ] = tonumber(string.sub(payload,5,5),16) * 16777216 +tonumber(string.sub(payload,6,6),16) * 65536 +tonumber(string.sub(payload,7,7),16) * 256 +tonumber(string.sub(payload,8,8),16)
-      --packet[ cmds[4] ] = tonumber(string.sub(payload,9,9),16) 
-      --packet[ cmds[5] ] = tonumber(string.sub(payload,10,10),16) 
+      packet[ cmds[3] ] = strTonum(string.byte(string.sub(payload,5,5))) * 16777216 + strTonum(string.byte(string.sub(payload,6,6))) * 65536 +strTonum(string.byte(string.sub(payload,7,7))) * 256 +strTonum(string.byte(string.sub(payload,8,8)))
+      packet[ cmds[4] ] = strTonum(string.byte(string.sub(payload,9,9))) 
+      packet[ cmds[5] ] = strTonum(string.byte(string.sub(payload,10,10))) 
       packet['status'] = 'success'
 
     else
