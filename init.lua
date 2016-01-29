@@ -48,10 +48,10 @@ function BitOperationXOR( a , b )
   local res = 0
   for i = 7 , 0 , -1
     do
-    res = res * 2
-    mask = 1 * (2^i)
-    aa = a bit.and mask
-    bb = b bit.and mask
+    res = res << 1
+    mask = 1 << i
+    aa = a & mask
+    bb = b & mask
 
     if aa == bb then
       res = res + 0
@@ -63,6 +63,34 @@ function BitOperationXOR( a , b )
   return res
 end
 
+
+function BitOperationAND( a , b )
+  local res = 0
+
+  for i=8,1,-1
+    do
+
+    res = res << 1
+
+    t1 = (a >> (i-1))
+    t2 = (a >> i)<<1
+    aa = t1 - t2    
+
+    t3 = (b >> (i-1))
+    t4 = (b >> i)<<1
+    bb = t3 - t4    
+
+    if( ( aa==1 ) and ( bb==1) )then
+      res = res + 1
+      --print(res)
+      --print(aa..'&'..bb..'->'..'1')
+    else
+      --print(aa..'&'..bb..'->'..'0')
+    end
+  end
+  --print("end of and")
+  return res
+end
 
 
 function CRC16( pdata, datalen)
@@ -83,14 +111,18 @@ function CRC16( pdata, datalen)
       do
       SaveHi = CRC16Hi;
       SaveLo = CRC16Lo;
-      CRC16Hi = CRC16Hi / 2;
-      CRC16Lo = CRC16Lo / 2;
+      CRC16Hi = CRC16Hi >> 1;
+      CRC16Lo = CRC16Lo >> 1;
       
-      if((SaveHi bit.and 0x01) == 0x01) then
+      if(BitOperationAND(SaveHi , 0x01) == 0x01) then
+      --if((SaveHi & 0x01) == 0x01) then
+        --print(SaveHi)
         CRC16Lo = CRC16Lo | 0x80;
       end
 
-      if((SaveLo bit.and 0x01) == 0x01) then
+      if(BitOperationAND(SaveLo , 0x01) == 0x01) then
+      --if((SaveLo & 0x01) == 0x01) then
+        --print(SaveLo)
         CRC16Hi = BitOperationXOR(CRC16Hi , CH);
         CRC16Lo = BitOperationXOR(CRC16Lo , CL);
       end
@@ -98,7 +130,7 @@ function CRC16( pdata, datalen)
     end 
   end 
 
-  return ( CRC16Hi * 256 ) | CRC16Lo ;
+  return ( CRC16Hi << 8 ) | CRC16Lo ;
 end
 
 
