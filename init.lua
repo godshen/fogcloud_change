@@ -26,9 +26,9 @@ local cmds = {
   [0x09] = "output_current",
   [0x0a] = "output_torque",
   [0x0b] = "bus_voltage",
-  [0x0c] = "anolog_input0",
-  [0x0d] = "anolog_input1",
-  [0x0e] = "anolog_input2",
+  [0x0c] = "analog_input0",
+  [0x0d] = "analog_input1",
+  [0x0e] = "analog_input2",
   [0x0f] = "cooling_temperature",
   [0x10] = "output_actpow",
   [0x11] = "output_tpow",
@@ -82,6 +82,41 @@ function strTonum( data )
   end
   return data
 end
+
+
+function CRC16(pdata, datalen)
+
+    local CRC16Lo,CRC16Hi,CL,CH,SaveHi,SaveLo;
+    local i,Flag;
+
+    CRC16Lo = 0xFF;
+    CRC16Hi = 0xFF;
+    CL = 0x01;
+    CH = 0xA0;
+
+  for i = 0 , datalen , 1
+    do
+    CRC16Lo ^= *(pdata + i);
+    for(Flag = 0; Flag < 8; Flag ++)
+    do
+    SaveHi = CRC16Hi;
+    SaveLo = CRC16Lo;
+    CRC16Hi >>= 1;
+    CRC16Lo >>= 1;
+    if((SaveHi & 0x01) == 0x01)  then
+      CRC16Lo |= 0x80;
+      if((SaveLo & 0x01) == 0x01) then
+
+      CRC16Hi ^= CH;
+      CRC16Lo ^= CL;
+      end
+    end
+    end
+end
+
+return (CRC16Hi << 8) | CRC16Lo;
+end
+
 function _M.decode(payload)
     local packet = {}
     strload = payload;
