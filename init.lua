@@ -135,10 +135,11 @@ function _M.decode(payload)
     local packet = {}
     strload = payload;
     packet['status'] = 'not'
+
     local crcdata = {}
     for i=1,DATALENGTH,1
       do
-      crcdata[i] = payload[]
+      crcdata[i] = getnumber(i)
     end
 
     if CRC16(crcdata,DATALENGTH)==(getnumber(43)*256+getnumber(44)) then
