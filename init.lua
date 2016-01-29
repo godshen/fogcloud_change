@@ -50,8 +50,8 @@ function BitOperationXOR( a , b )
     do
     res = res * 2
     mask = 1 * (2^i)
-    aa = a bit.& mask
-    bb = b bit.& mask
+    aa = a bit.and mask
+    bb = b bit.and mask
 
     if aa == bb then
       res = res + 0
@@ -86,11 +86,11 @@ function CRC16( pdata, datalen)
       CRC16Hi = CRC16Hi / 2;
       CRC16Lo = CRC16Lo / 2;
       
-      if((SaveHi bit.& 0x01) == 0x01) then
+      if((SaveHi bit.and 0x01) == 0x01) then
         CRC16Lo = CRC16Lo | 0x80;
       end
 
-      if((SaveLo bit.& 0x01) == 0x01) then
+      if((SaveLo bit.and 0x01) == 0x01) then
         CRC16Hi = BitOperationXOR(CRC16Hi , CH);
         CRC16Lo = BitOperationXOR(CRC16Lo , CL);
       end
