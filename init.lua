@@ -13,6 +13,7 @@ local strchar = string.char
 
 local strload
 local DATALENGTH = 42
+
 local cmds = {
   [0x00] = "head1",
   [0x01] = "head2",
@@ -42,6 +43,25 @@ local cmds = {
 
 
 
+function BitOperationXOR( a , b )
+  local mask
+  local res = 0
+  for i = 7 , 0 , -1
+    do
+    res = res << 1
+    mask = 1 << i
+    aa = a & mask
+    bb = b & mask
+
+    if aa == bb then
+      res = res + 0
+    else
+      res = res + 1
+    end
+
+  end
+  return res
+end
 
 function CRC16( pdata, datalen)
 
@@ -55,7 +75,7 @@ function CRC16( pdata, datalen)
 
   for i=1,datalen,1
     do
-    CRC16Lo = CRC16Lo ~ pdata[i];
+    CRC16Lo = BitOperationXOR(CRC16Lo , pdata[i]);
     
     for Flag=0,7,1
       do
@@ -69,8 +89,8 @@ function CRC16( pdata, datalen)
       end
 
       if((SaveLo & 0x01) == 0x01) then
-        CRC16Hi = CRC16Hi ~ CH;
-        CRC16Lo = CRC16Lo ~ CL;
+        CRC16Hi = BitOperationXOR(CRC16Hi , CH);
+        CRC16Lo = BitOperationXOR(CRC16Lo , CL);
       end
 
     end 
@@ -81,13 +101,22 @@ end
 
 
 
-
-
-function string.tohex(str)
-    return (str:gsub('.', function (c)
-        return string.format('%02X', string.byte(c))
-    end))
+function getnumber( index )
+   return strTonum(string.byte(string.sub(strload,index,index)))
 end
+function strTonum( data )
+  if data > 96 and data < 103 then
+    data = data - 87
+  end
+  if data > 64 and data < 70 then
+    data = data - 55
+  end
+  if data > 47 and data < 59 then
+    data = data - 48
+  end
+  return data
+end
+
 
 local function _pack(cmd, data, msg_id)
     local packet = {}
@@ -113,23 +142,6 @@ function _M.encode(payload)
         return _pack(cmd, data)
     end
 end
-function getnumber( index )
-   return strTonum(string.byte(string.sub(strload,index,index)))
-end
-function strTonum( data )
-  if data > 96 and data < 103 then
-    data = data - 87
-  end
-  if data > 64 and data < 70 then
-    data = data - 55
-  end
-  if data > 47 and data < 59 then
-    data = data - 48
-  end
-  return data
-end
-
-
 
 function _M.decode(payload)
     local packet = {}
