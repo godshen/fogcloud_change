@@ -182,12 +182,14 @@ function _M.decode(payload)
     strload = payload;
     packet['status'] = 'not'
 
+    --[[
     local crcdata = {}
     for i=1,DATALENGTH,1
       do
       crcdata[i] = getnumber(i)
     end
-
+    --]]
+    
     --if CRC16(crcdata,DATALENGTH)==(getnumber(43)*256+getnumber(44)) then
     if( true ) then
       local head1 = string.sub(payload,1,1)
