@@ -42,7 +42,7 @@ local cmds = {
 }
 
 
-
+--[[
 function BitOperationXOR( a , b )
   local mask
   local res = 0
@@ -133,7 +133,7 @@ function CRC16( pdata, datalen)
   return ( CRC16Hi << 8 ) | CRC16Lo ;
 end
 
-
+--]]
 
 function getnumber( index )
    return strTonum(string.byte(string.sub(strload,index,index)))
@@ -188,8 +188,8 @@ function _M.decode(payload)
       crcdata[i] = getnumber(i)
     end
 
-    if CRC16(crcdata,DATALENGTH)==(getnumber(43)*256+getnumber(44)) then
-
+    --if CRC16(crcdata,DATALENGTH)==(getnumber(43)*256+getnumber(44)) then
+    if( true ) then
       local head1 = string.sub(payload,1,1)
       local head2 = string.sub(payload,2,2)
 
