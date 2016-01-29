@@ -2,7 +2,7 @@ local _M = {}
 local bit = require "bit"
 local crc16 = require "crc16"
 local cjson = require "cjson.safe"
-local bit = require "bit"
+
 local Json = cjson.encode
 
 local insert = table.insert
@@ -50,8 +50,8 @@ function BitOperationXOR( a , b )
     do
     res = res * 2
     mask = 1 * (2^i)
-    aa = a & mask
-    bb = b & mask
+    aa = a bit.& mask
+    bb = b bit.& mask
 
     if aa == bb then
       res = res + 0
@@ -62,6 +62,8 @@ function BitOperationXOR( a , b )
   end
   return res
 end
+
+
 
 function CRC16( pdata, datalen)
 
@@ -84,11 +86,11 @@ function CRC16( pdata, datalen)
       CRC16Hi = CRC16Hi / 2;
       CRC16Lo = CRC16Lo / 2;
       
-      if((SaveHi & 0x01) == 0x01) then
+      if((SaveHi bit.& 0x01) == 0x01) then
         CRC16Lo = CRC16Lo | 0x80;
       end
 
-      if((SaveLo & 0x01) == 0x01) then
+      if((SaveLo bit.& 0x01) == 0x01) then
         CRC16Hi = BitOperationXOR(CRC16Hi , CH);
         CRC16Lo = BitOperationXOR(CRC16Lo , CL);
       end
