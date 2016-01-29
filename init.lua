@@ -12,7 +12,7 @@ local strbyte = string.byte
 local strchar = string.char
 
 local strload
-
+local DATALENGTH = 42
 local cmds = {
   [0x00] = "head1",
   [0x01] = "head2",
@@ -32,9 +32,55 @@ local cmds = {
   [0x0f] = "cooling_temperature",
   [0x10] = "output_actpow",
   [0x11] = "output_tpow",
-  [0x12] = "CRCheck"
+  [0x12] = "reserve0",
+  [0x13] = "reserve1",
+  [0x14] = "reserve2",
+  [0x15] = "reserve3",
+  [0x16] = "CRCheck"
 
 }
+
+
+
+
+function CRC16( pdata, datalen)
+
+  local CRC16Lo,CRC16Hi,CL,CH,SaveHi,SaveLo;
+  local i,Flag;
+  
+  CRC16Lo = 0xFF;
+  CRC16Hi = 0xFF;
+  CL = 0x01;
+  CH = 0xA0;
+
+  for i=1,datalen,1
+    do
+    CRC16Lo = CRC16Lo ~ pdata[i];
+    
+    for Flag=0,7,1
+      do
+      SaveHi = CRC16Hi;
+      SaveLo = CRC16Lo;
+      CRC16Hi = CRC16Hi >> 1;
+      CRC16Lo = CRC16Lo >> 1;
+      
+      if((SaveHi & 0x01) == 0x01) then
+        CRC16Lo = CRC16Lo | 0x80;
+      end
+
+      if((SaveLo & 0x01) == 0x01) then
+        CRC16Hi = CRC16Hi ~ CH;
+        CRC16Lo = CRC16Lo ~ CL;
+      end
+
+    end 
+  end 
+
+  return (CRC16Hi << 8) | CRC16Lo;
+end
+
+
+
 
 
 function string.tohex(str)
@@ -85,34 +131,44 @@ end
 
 
 
-
 function _M.decode(payload)
     local packet = {}
     strload = payload;
     packet['status'] = 'not'
-    local head1 = string.sub(payload,1,1)
-    local head2 = string.sub(payload,2,2)
+    local crcdata = {}
+    for i=1,DATALENGTH,1
+      do
+      crcdata[i] = payload[]
+    end
 
-    if (head1== ';' and head2=='1') then 
+    if CRC16(crcdata,DATALENGTH)==(getnumber(43)*256+getnumber(44)) then
 
-      packet[ cmds[2] ] = getnumber(3) * 256 + getnumber(4);
-      packet[ cmds[3] ] = getnumber(5) * 16777216 + getnumber(6) * 65536 + getnumber(7) * 256 + getnumber(8)
-      if getnumber(9) == 1 then
-        packet[ cmds[4] ] = 'Mode-485'
+      local head1 = string.sub(payload,1,1)
+      local head2 = string.sub(payload,2,2)
+
+      if (head1== ';' and head2=='1') then 
+
+        packet[ cmds[2] ] = getnumber(3) * 256 + getnumber(4);
+        packet[ cmds[3] ] = getnumber(5) * 16777216 + getnumber(6) * 65536 + getnumber(7) * 256 + getnumber(8)
+        if getnumber(9) == 1 then
+          packet[ cmds[4] ] = 'Mode-485'
+        else
+          packet[ cmds[4] ] = 'Mode-232'
+        end
+        packet[ cmds[5] ] = getnumber(10)
+
+        for i=0,30,2
+          do
+          packet[ cmds[6+i/2] ] = getnumber(11+i) * 256 + getnumber(12+i)
+        end
+        packet['status'] = 'success'
+
       else
-        packet[ cmds[4] ] = 'Mode-232'
-      end
-      packet[ cmds[5] ] = getnumber(10)
+        packet['status'] = 'HEAD-ERROR'
 
-      for i=0,22,2
-        do
-        packet[ cmds[6+i/2] ] = getnumber(11+i) * 256 + getnumber(12+i)
       end
-      packet['status'] = 'success'
-
     else
-      packet['status'] = 'wrong'
-
+      packet['status'] = 'CRC-ERROR'
     end
 
     return Json(packet)
