@@ -84,38 +84,7 @@ function strTonum( data )
 end
 
 
-function CRC16(pdata, datalen)
 
-    local CRC16Lo,CRC16Hi,CL,CH,SaveHi,SaveLo;
-    local i,Flag;
-
-    CRC16Lo = 0xFF;
-    CRC16Hi = 0xFF;
-    CL = 0x01;
-    CH = 0xA0;
-
-  for i = 0 , datalen , 1
-    do
-    CRC16Lo ^= *(pdata + i);
-    for(Flag = 0; Flag < 8; Flag ++)
-    do
-    SaveHi = CRC16Hi;
-    SaveLo = CRC16Lo;
-    CRC16Hi >>= 1;
-    CRC16Lo >>= 1;
-    if((SaveHi & 0x01) == 0x01)  then
-      CRC16Lo |= 0x80;
-      if((SaveLo & 0x01) == 0x01) then
-
-      CRC16Hi ^= CH;
-      CRC16Lo ^= CL;
-      end
-    end
-    end
-end
-
-return (CRC16Hi << 8) | CRC16Lo;
-end
 
 function _M.decode(payload)
     local packet = {}
