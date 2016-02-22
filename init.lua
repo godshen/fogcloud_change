@@ -216,7 +216,7 @@ function _M.decode(payload)
 
       end
     else
-      packet['status'] = 'CRC-ERROR'
+      packet['status'] = 'ERROR'
     end
 
     return Json(packet)
